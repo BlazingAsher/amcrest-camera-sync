@@ -9,5 +9,6 @@ The [Python Amcrest library](https://github.com/tchellomello/python-amcrest) is 
 
 ## Notes
 - Make sure you set the TZ environment variable to match that of your Amcrest camera if your system timezone doesn't match. Otherwise, the time & date that will be given to your camera will be wrong, and you will get files for the wrong time (or no files at all, if the camera timezone is behind the system/default timezone).
+- If you're running in Docker, you'll probably need to set the environment variable `LISTEN_ADDRESS` to `0.0.0.0` in order for port forwarding to work correctly.
 
 Not affiliated or endorsed by Amcrest in any way.
