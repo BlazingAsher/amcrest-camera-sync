@@ -14,6 +14,8 @@ FILE_INFO_REGEX = r'(\d{4}-\d{2}-\d{2})/.*?/(\d{2}\.\d{2}\.\d{2})-(\d{2}\.\d{2}\
 logger = logging.getLogger(__name__)
 sync_duration_histogram = Histogram('sync_job_duration_seconds', 'Duration of sync jobs in seconds', buckets=[1, 5, 10, 15, 20, 25, 30, 35])
 written_bytes_counter = Counter('sync_job_written_bytes', 'Total number of bytes written by the camera sync job')
+sync_file_failures_counter = Counter('sync_job_file_failures', 'Total number of failed file transfers by the camera sync job')
+sync_written_files_counter = Counter('sync_job_written_files', 'Total number of files written by the camera sync job')
 
 def parse_http_response(iterator):
     result = []
@@ -132,8 +134,10 @@ def sync_files():
                     output_bytes = camera.download_file(file_path)
                     f.write(output_bytes)
                     written_bytes_counter.inc(len(output_bytes))
+                    sync_written_files_counter.inc(1)
         except Exception:
             logger.error(f"Encountered an issue retrieving {file_path}", exc_info=True)
+            sync_file_failures_counter.inc(1)
 
     duration = datetime.now() - start
     logger.info(f"Sync finished in {duration}.")
