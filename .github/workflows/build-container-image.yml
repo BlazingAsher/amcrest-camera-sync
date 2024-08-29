@@ -6,9 +6,9 @@ on:
       - master
 
 jobs:
-  Build and Push:
+  build_and_push:
+    name: Build and Push
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3
